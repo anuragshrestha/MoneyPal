@@ -5,53 +5,36 @@ import {
   TextInput,
   View,
   StyleSheet,
-  Button,
   TouchableOpacity,
   Alert,
-  StatusBar
 } from "react-native";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { FIREBASE_AUTH} from "../firebase/FireBaseAuth";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { LinearGradient } from "expo-linear-gradient";
-import axios from "axios";
+
 
 const LogInScreen = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation<any>();
 
-  const logIn = useCallback(async () => {
-    try {
-      const response = await axios.get(
-        "https://lendven-37dcb-default-rtdb.firebaseio.com/lendven.json" 
-      );
-      const data = response.data;
-     // console.log("Fetched Data: ", data); 
 
-      for (let key in data) {
-        const user = data[key];
-        const isEmailMatch = user.email.toLowerCase() === username.toLowerCase();
-        const isMobileMatch = user.mobileNumber === username;
-        const isPasswordMatch = user.password === password;
-
-        if ((isEmailMatch || isMobileMatch) && isPasswordMatch) {
-          console.log("Logged in successfully.");
-          setUsername("");
-          setPassword("");
-          navigation.navigate("BottomTab");
-          return;
-        }
-      }
-      Alert.alert("Invalid credentials", "please check your username and password.")
-    } catch (error) {
-      console.log("error: ", error);
-    }
-  }, [username, password]);
+  const handleSignIn = async() => {
+     try{
+      const userCredential = await signInWithEmailAndPassword(FIREBASE_AUTH, username, password);
+      console.log('user logged in: ', userCredential.user);
+      navigation.navigate('BottomTab');
+     } catch(error){
+      Alert.alert("Error", "Incorrect email or password!!");
+     }
+  };
 
   return (
     
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.welcomeText}>Welcome to lendven</Text>
+      <Text style={styles.welcomeText}>Welcome to MoneyPal</Text>
       <View style={styles.mainView}>
         <Text style={styles.text}>User name</Text>
         <View style={styles.inputContainer}>
@@ -82,7 +65,7 @@ const LogInScreen = () => {
             end={{ x: 1, y: 1 }}
             style={styles.gradientButton}
           >
-            <TouchableOpacity style={styles.button} onPress={logIn}>
+            <TouchableOpacity style={styles.button} onPress={handleSignIn}>
               <Text style={styles.buttonText}>Log In</Text>
             </TouchableOpacity>
           </LinearGradient>
