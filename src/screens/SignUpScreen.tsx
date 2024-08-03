@@ -7,51 +7,33 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
-  Button,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import ScreenWrapper from "../components/ScreenWrapper";
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "react-native-vector-icons/FontAwesome";
-import axios from 'axios';
+import {createUserWithEmailAndPassword }from "firebase/auth";
+import {doc, setDoc} from "firebase/firestore";
+import { FIREBASE_AUTH, FIREBASE_DB } from "../firebase/FireBaseAuth";
+
 
 const SignUpScreen = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const navigation = useNavigation<any>();
 
   const isValidName = (name: string) => /^[^\s@]{2,}/.test(name);
   const isValidEmail = (email: string) =>
     /^[^\s@]+@[^s@]{5}.[^/s@]{3}$/.test(email);
-  const isValidNumber = (number: string) => /^\d{10}$/.test(number);
   const isValidPassword = (password: string) => /^[^s@]{6,}/.test(password);
 
-  function createAccount() {
 
+  function createAccount(){
     if(verifiedDetails()){
-      saveUserDetails();
-      
+      handleSignUp();
     }
   }
-
-  const saveUserDetails = useCallback(async () => {
-     const userData = {
-      name: username,
-      email: email,
-      mobileNumber: phoneNumber,
-      password: password,
-     }
-
-     try{
-      await axios.post('https://lendven-37dcb-default-rtdb.firebaseio.com/lendven.json', userData);
-      navigation.navigate("LogIn");
-     } catch(error) {
-      console.log("error saving to list: ",  error);
-     }
-    
-  }, [username, email, phoneNumber, password]);
 
   function verifiedDetails() {
     if (!isValidName(username)) {
@@ -62,16 +44,29 @@ const SignUpScreen = () => {
       Alert.alert("Invalid email address")
       return false;
     }
-    if(!isValidNumber(phoneNumber)){
-      Alert.alert("Invalid phone number", "number should be exactly 10 digits");
-      return false;
-    }
     if(!isValidPassword(password)){
       Alert.alert("Invalid password", "password must be at least six digits and can only contain letters and numbers.")
       return false;
     }
      return true;
   }
+
+ const handleSignUp = async() => {
+   try{
+    const userCredentials = await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
+    const user = userCredentials.user;
+    await setDoc(doc(FIREBASE_DB, "users", user.uid), {
+      id: user.uid,
+      name: username,
+      email: email,
+      createdAt: new Date(),
+    });
+    console.log('account created sucessfully')
+    navigation.navigate("LogIn");
+   } catch(error){
+    Alert.alert("Error signing up. Please try again.")
+   }
+ }
 
   return (
     <ScreenWrapper>
@@ -106,17 +101,6 @@ const SignUpScreen = () => {
               placeholderTextColor="grey"
               value={email}
               onChangeText={(text: string) => setEmail(text.toLowerCase())}
-            />
-          </View>
-          <Text style={styles.text}>Phone</Text>
-          <View style={styles.inputContainer}>
-            <Icon name="phone" size={20} color="black" style={styles.icon} />
-            <TextInput
-              style={styles.label}
-              placeholder="Enter your mobile number"
-              placeholderTextColor="grey"
-              value={phoneNumber}
-              onChangeText={setPhoneNumber}
             />
           </View>
           <Text style={styles.text}>Password</Text>
