@@ -1,0 +1,31 @@
+export const GlobalStyles = {
+    colors: {
+      primary_black: "#202020",
+      primary_white: "#ffffff",
+      primary_blue: "#2B84C5",
+      primary_lightblue: "#D3E5E7",
+      primary_midblue: "rgba(22, 124, 207, 0.31)",
+      primary_lightgrey: "#f2f2f2",
+      primary_darkgrey: "#c7c6c3",
+      primary_orange: "#FFA500",
+      primary_darkblue: "#004d9d",
+      primary_green: "green",
+      primary_lightergrey: "rgba(246,246,256, 1)",
+      primary_darkergrey: "rgba(0,0,0,0.5)",
+    },
+    colors_dark: {
+      primary_white: "#000013",
+      primary_black: "#ffffff",
+      primary_blue: "#FFA500",
+      primary_lightblue: "#D3E5E7",
+      primary_midblue: "rgba(22, 124, 207, 0.31)",
+      primary_lightgrey: "#2F2929",
+      primary_darkgrey: "#393A3B",
+      primary_orange: "#2B84C5",
+      primary_darkblue: "#FF6700",
+      primary_green: "#39FF14",
+      primary_lightergrey: "rgba(50,50,70, 1)",
+      primary_darkergrey: "rgba(255,255,255,0.5)",
+    },
+  };
+  
