@@ -12,10 +12,9 @@ import { useNavigation } from "@react-navigation/native";
 import ScreenWrapper from "../components/ScreenWrapper";
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "react-native-vector-icons/FontAwesome";
-import {createUserWithEmailAndPassword }from "firebase/auth";
-import {doc, setDoc} from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { ref, set } from "firebase/database";
 import { FIREBASE_AUTH, FIREBASE_DB } from "../firebase/FireBaseAuth";
-
 
 const SignUpScreen = () => {
   const [username, setUsername] = useState("");
@@ -28,9 +27,8 @@ const SignUpScreen = () => {
     /^[^\s@]+@[^s@]{5}.[^/s@]{3}$/.test(email);
   const isValidPassword = (password: string) => /^[^s@]{6,}/.test(password);
 
-
-  function createAccount(){
-    if(verifiedDetails()){
+  function createAccount() {
+    if (verifiedDetails()) {
       handleSignUp();
     }
   }
@@ -38,35 +36,42 @@ const SignUpScreen = () => {
   function verifiedDetails() {
     if (!isValidName(username)) {
       Alert.alert("Invalid name", "name must be at least 2 letters");
-       return false;
-    }
-    if(!isValidEmail(email)){
-      Alert.alert("Invalid email address")
       return false;
     }
-    if(!isValidPassword(password)){
-      Alert.alert("Invalid password", "password must be at least six digits and can only contain letters and numbers.")
+    if (!isValidEmail(email)) {
+      Alert.alert("Invalid email address");
       return false;
     }
-     return true;
+    if (!isValidPassword(password)) {
+      Alert.alert(
+        "Invalid password",
+        "password must be at least six digits and can only contain letters and numbers."
+      );
+      return false;
+    }
+    return true;
   }
 
- const handleSignUp = async() => {
-   try{
-    const userCredentials = await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
-    const user = userCredentials.user;
-    await setDoc(doc(FIREBASE_DB, "users", user.uid), {
-      id: user.uid,
-      name: username,
-      email: email,
-      createdAt: new Date(),
-    });
-    console.log('account created sucessfully')
-    navigation.navigate("LogIn");
-   } catch(error){
-    Alert.alert("Error signing up. Please try again.")
-   }
- }
+  const handleSignUp = async () => {
+    try {
+      const userCredentials = await createUserWithEmailAndPassword(
+        FIREBASE_AUTH,
+        email,
+        password
+      );
+      const user = userCredentials.user;
+      await set(ref(FIREBASE_DB, "users/" + user.uid), {
+        id: user.uid,
+        name: username,
+        email: email,
+        createdAt: new Date().toISOString(),
+      });
+      console.log("Account created successfully");
+      navigation.navigate("LogIn");
+    } catch (error) {
+      Alert.alert("Error signing up. Please try again.");
+    }
+  };
 
   return (
     <ScreenWrapper>
@@ -108,7 +113,7 @@ const SignUpScreen = () => {
             <Icon name="lock" size={20} color="black" style={styles.icon} />
             <TextInput
               style={styles.label}
-              placeholder="Enter password"
+              placeholder="Create a password"
               placeholderTextColor="grey"
               value={password}
               onChangeText={setPassword}
@@ -126,12 +131,12 @@ const SignUpScreen = () => {
           </LinearGradient>
         </View>
         <View style={styles.row}>
-          <Text style={{ color: "grey" }}>Already have a account?</Text>
+          <Text style={{ color: "grey" }}>Already have an account?</Text>
           <TouchableOpacity
             style={{ marginLeft: 8 }}
             onPress={() => navigation.navigate("LogIn")}
           >
-            <Text style={styles.loginText}>log in</Text>
+            <Text style={styles.loginText}>Log in</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -177,7 +182,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     margin: 5,
     width: "90%",
-    marginTop: 10,
+    marginTop: 15,
   },
   buttonText: {
     color: "white",
