@@ -41,7 +41,7 @@ const LogInScreen = () => {
           <Icon name="user" size={20} color="black" style={styles.icon} />
           <TextInput
             style={styles.label}
-            placeholder="Enter mobile number or email"
+            placeholder="Enter your email"
             placeholderTextColor="grey"
             value={username}
             onChangeText={(text: string) => setUsername(text.toLowerCase())}
