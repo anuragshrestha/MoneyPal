@@ -34,9 +34,7 @@ const HomeScreenHeader = () => {
 
   return (
     <View>
-      <Text style={{ color: "white", fontSize: 26, textAlign: "center", marginVertical: 10 }}>
-        Welcome {userName?.split(' ')[0]}
-      </Text>
+      <Text style={styles.welcomeText}>Welcome {userName?.split(" ")[0]}</Text>
 
       <View style={styles.header}>
         <View style={{ gap: 5 }}>
@@ -76,5 +74,12 @@ const styles = StyleSheet.create({
     color: "green",
     fontSize: 25,
     paddingTop: 10,
+  },
+  welcomeText: {
+    color: "skyblue",
+    fontWeight: "bold",
+    fontSize: 26,
+    textAlign: "center",
+    marginVertical: 10,
   },
 });
