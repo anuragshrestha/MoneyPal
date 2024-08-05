@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, {useEffect, useState } from "react";
 import {
   ScrollView,
   Text,
@@ -9,30 +9,38 @@ import {
   Alert,
 } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { FIREBASE_AUTH} from "../firebase/FireBaseAuth";
-import { useNavigation } from "@react-navigation/native";
+import { FIREBASE_AUTH } from "../firebase/FireBaseAuth";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { LinearGradient } from "expo-linear-gradient";
-
 
 const LogInScreen = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation<any>();
 
+  useFocusEffect(
+    React.useCallback(() => {
+    setUsername("");
+    setPassword("");
+  }, [])
+);
 
-  const handleSignIn = async() => {
-     try{
-      const userCredential = await signInWithEmailAndPassword(FIREBASE_AUTH, username, password);
-      console.log('user logged in: ', userCredential.user);
-      navigation.navigate('BottomTab');
-     } catch(error){
+  const handleSignIn = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        FIREBASE_AUTH,
+        username,
+        password
+      );
+      console.log("user logged in: ", userCredential.user);
+      navigation.navigate("BottomTab");
+    } catch (error) {
       Alert.alert("Error", "Incorrect email or password!!");
-     }
+    }
   };
 
   return (
-    
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.welcomeText}>Welcome to MoneyPal</Text>
       <View style={styles.mainView}>
@@ -85,7 +93,6 @@ const LogInScreen = () => {
         </View>
       </View>
     </ScrollView>
-
   );
 };
 
