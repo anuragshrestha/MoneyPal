@@ -174,6 +174,7 @@ const styles = StyleSheet.create({
   nameText: {
     paddingTop: 5,
     fontSize: 18,
+    fontWeight: 'bold',
   },
   profileImage: {
     width: 120,
@@ -234,7 +235,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 150,
-    marginLeft: 130,
+    marginLeft: 142,
   },
   pressed: {
     opacity: 0.7,
