@@ -13,12 +13,15 @@ import {
 import ScreenWrapper from "../components/ScreenWrapper";
 import { useColors } from "../contexts/ColorContext";
 import Icon from "react-native-vector-icons/Ionicons";
-import { FIREBASE_DB } from "../firebase/FireBaseAuth";
+import { FIREBASE_AUTH } from "../firebase/FireBaseAuth";
+import { FIREBASE_DB1 } from "../firebase/FireBaseAuth";
 import axios from "axios";
 import { push, ref, set } from "firebase/database";
+import { doc, Firestore, getDocs, collection, setDoc, } from "firebase/firestore";
 
 interface Transaction {
   name: string;
+  email: string;
   amount: string;
   transactionType: string;
 }
@@ -42,17 +45,17 @@ const AddScreen = () => {
 
   const verify = useCallback(async () => {
     try {
-      const response = await axios.get(
-        "https://lendven-37dcb-default-rtdb.firebaseio.com/users.json"
-      );
-      const data = response.data;
-      console.log("users data fetched: ", data);
+      const allUsers = await getDocs(collection(FIREBASE_DB1, "users"));
+      let foundMatch = false;
 
-      for (let key in data) {
-        const user = data[key];
+      //loop through each users in the collection
+      allUsers.forEach((doc: { data: () => any; }) => {
+
+        const user = doc.data();
         const isEmailMatch = user.email.toLowerCase() === name.toLowerCase();
 
         if (isEmailMatch) {
+          foundMatch = true;
           setIsIdInList(true);
           setUsername(user.name);
           console.log(user.name);
@@ -61,8 +64,12 @@ const AddScreen = () => {
           console.log("matched matched");
           return;
         }
+      });
+      
+      if(!foundMatch){
+        setIsIdInList(false);
       }
-      setIsIdInList(false);
+    
     } catch (error) {
       console.log("error: ", error);
     }
@@ -79,9 +86,25 @@ const AddScreen = () => {
     };
 
     try {
-      const newTransactionRef = push(ref(FIREBASE_DB,'transaction'));
-      await set( newTransactionRef,transactionData );
-      fetchAllTransactions();
+        
+      const user = FIREBASE_AUTH.currentUser;
+
+      if(user){
+        
+        //reference to the current user document in the transations collection
+        const userDocRef = doc(FIREBASE_DB1, "transactions", user.uid);
+
+        // reference to the sub-collection userTransactions inside the current user document.
+        const newTransactionRef = doc(collection(userDocRef, 'userTransactions'));
+
+        //save the transactions data in the doc
+         await setDoc( newTransactionRef,transactionData );
+         console.log("trasactions save succesfully ", user.uid);
+         fetchAllTransactions();
+         
+      } else{
+        console.log("no user logged in");    
+      }
     } catch (error) {
       console.log("error saving transaction details", error);
     }
@@ -108,7 +131,7 @@ const AddScreen = () => {
     if (parseFloat(interest) > 12) {
       Alert.alert(
         "High Interest rate!!",
-        "Interest should not be more than 15%"
+        "Interest should not be more than 12%"
       );
       return false;
     }
@@ -117,21 +140,26 @@ const AddScreen = () => {
 
   const fetchAllTransactions = useCallback(async () => {
     try {
-      const response = await axios.get(
-        "https://lendven-37dcb-default-rtdb.firebaseio.com/transaction.json"
-      );
-      const data = response.data;
 
-      if (!data) {
-        console.log("No transaction data found.");
-        return;
+      const user = FIREBASE_AUTH.currentUser;
+
+      if(user){
+
+        const userDocRef = doc(FIREBASE_DB1, 'transactions', user.uid);
+        const querySnapShot = await getDocs(collection(userDocRef, "userTransactions"));
+
+        const transactionArray : Transaction[] = [];
+
+        querySnapShot.forEach((doc) => {
+          const data = doc.data() as Transaction;
+          transactionArray.push(data);
+        });
+
+        setTransactions(transactionArray);
+
+      }else{
+        console.log("no user's logged in");   
       }
-
-      const transactionArray = Object.keys(data).map((key) => data[key]);
-      
-      console.log("transaction array:", transactionArray);
-
-      setTransactions(transactionArray);
     } catch (error) {
       console.log("Error fetching transactions:", error);
     }
@@ -499,4 +527,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+function Collection(FIREBASE_DB1: Firestore, arg1: string): import("@firebase/firestore").DocumentReference<unknown, import("@firebase/firestore").DocumentData> {
+  throw new Error("Function not implemented.");
+}
 

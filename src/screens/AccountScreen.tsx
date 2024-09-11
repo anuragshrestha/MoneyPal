@@ -8,9 +8,9 @@ import {
 } from "../naviagtionTypes";
 import { Image } from "react-native";
 import { signOut } from "firebase/auth";
-import { FIREBASE_AUTH, FIREBASE_DB } from "../firebase/FireBaseAuth";
+import { FIREBASE_AUTH, FIREBASE_DB1 } from "../firebase/FireBaseAuth";
 import { useNavigation } from "@react-navigation/native";
-import { get, ref } from "firebase/database";
+import { doc, getDoc } from "firebase/firestore";
 
 const AccountScreen = () => {
   const { colors } = useColors();
@@ -23,11 +23,11 @@ const AccountScreen = () => {
     const fetchUserData = async () => {
       const user = FIREBASE_AUTH.currentUser;
       if (user) {
-        const docRef = ref(FIREBASE_DB, `users/${user.uid}`);
-        const onSnapShot = await get(docRef);
+        const docRef = doc(FIREBASE_DB1, `users/${user.uid}`);
+        const onSnapShot = await getDoc(docRef);
 
         if(onSnapShot.exists()){
-          const userData = onSnapShot.val();
+          const userData = onSnapShot.data();
            setUserName(userData.name);
         }
       }
