@@ -79,7 +79,7 @@ const AddScreen = () => {
     };
 
     try {
-      const newTransactionRef = push(ref(FIREBASE_DB,'transactions'));
+      const newTransactionRef = push(ref(FIREBASE_DB,'transaction'));
       await set( newTransactionRef,transactionData );
       fetchAllTransactions();
     } catch (error) {

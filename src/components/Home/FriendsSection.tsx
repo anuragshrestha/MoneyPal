@@ -12,25 +12,25 @@ export const info = {
   balance: 1345.01,
   friendList: [
     {
-      name: "Jame Bell",
+      name: "Lax Adhikari",
       amount_lent: 1450,
       interest_earned: 50.12,
       owes: 1500.12,
     },
     {
-      name: "David Cook",
+      name: "Somiyo Rana",
       amount_lent: 200,
       interest_earned: 14.91,
       owes: 214.91,
     },
     {
-      name: "Robert lucas",
+      name: "Priya Dahal",
       amount_lent: -400,
       interest_earned: -20.01,
       owes: -420.01,
     },
     {
-      name: "Anthony Bell",
+      name: "Bikash",
       amount_lent: -1600,
       interest_earned: -50.12,
       owes: -1670.12,
