@@ -33,7 +33,7 @@ const LogInScreen = () => {
         username,
         password
       );
-      console.log("user logged in: ", userCredential.user);
+      //console.log("user logged in: ", userCredential.user);
       navigation.navigate("BottomTab");
     } catch (error) {
       Alert.alert("Error", "Incorrect email or password!!");
