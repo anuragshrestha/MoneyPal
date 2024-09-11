@@ -6,8 +6,9 @@ import CustomPressable from "../../UI/CustomPressable";
 import { useNavigation } from "@react-navigation/native";
 import { useColors } from "../../contexts/ColorContext";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { FIREBASE_AUTH, FIREBASE_DB } from "../../firebase/FireBaseAuth";
+import { FIREBASE_AUTH, FIREBASE_DB, FIREBASE_DB1 } from "../../firebase/FireBaseAuth";
 import { get, ref, set } from "firebase/database";
+import { doc, getDoc } from "firebase/firestore";
 
 const HomeScreenHeader = () => {
   const { colors } = useColors();
@@ -20,11 +21,11 @@ const HomeScreenHeader = () => {
     const fetchData = async () => {
       const user = FIREBASE_AUTH.currentUser;
       if (user) {
-        const userRef = ref(FIREBASE_DB, `users/${user.uid}`);
-        const onSnapShot = await get(userRef);
+        const userRef = doc(FIREBASE_DB1, `users/${user.uid}`);
+        const onSnapShot = await getDoc(userRef);
 
         if (onSnapShot.exists()) {
-          const userData = onSnapShot.val();
+          const userData = onSnapShot.data();
           setUserName(userData.name);
         }
       }
