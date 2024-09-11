@@ -13,8 +13,8 @@ import ScreenWrapper from "../components/ScreenWrapper";
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { ref, set } from "firebase/database";
-import { FIREBASE_AUTH, FIREBASE_DB } from "../firebase/FireBaseAuth";
+import { FIREBASE_AUTH, FIREBASE_DB, FIREBASE_DB1 } from "../firebase/FireBaseAuth";
+import { doc, setDoc } from "firebase/firestore";
 
 const SignUpScreen = () => {
   const [username, setUsername] = useState("");
@@ -24,8 +24,9 @@ const SignUpScreen = () => {
 
   const isValidName = (name: string) => /^[^\s@]{2,}/.test(name);
   const isValidEmail = (email: string) =>
-    /^[^\s@]+@[^s@]{5}.[^/s@]{3}$/.test(email);
-  const isValidPassword = (password: string) => /^[^s@]{6,}/.test(password);
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const isValidPassword = (password: string) => /^[a-zA-Z0-9]{6,}$/.test(password);
 
   function createAccount() {
     if (verifiedDetails()) {
@@ -60,7 +61,7 @@ const SignUpScreen = () => {
         password
       );
       const user = userCredentials.user;
-      await set(ref(FIREBASE_DB, "users/" + user.uid), {
+      await setDoc(doc(FIREBASE_DB1, "users", user.uid), {
         id: user.uid,
         name: username,
         email: email,
@@ -69,7 +70,7 @@ const SignUpScreen = () => {
       console.log("Account created successfully");
       navigation.navigate("LogIn");
     } catch (error) {
-      Alert.alert("Error signing up. Please try again.");
+      Alert.alert("Error signing up. Please try again. " + error);
     }
   };
 
