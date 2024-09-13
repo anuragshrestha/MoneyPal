@@ -1,11 +1,9 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useColors } from "../../contexts/ColorContext";
 import { formatNumber } from "../../utils/utilFunction";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import { FIREBASE_DB1, FIREBASE_AUTH } from "../../firebase/FireBaseAuth";
-
-const [transactions, setTransactions] = useState<Transaction[]>([]);
 
 export const info = {
   //name: "Anurag",
@@ -31,6 +29,7 @@ export const info = {
 };
 
 interface Transaction {
+  length: number;
   name: string;
   email: string;
   amount: string;
@@ -38,35 +37,42 @@ interface Transaction {
   interestEarned: string;
 }
 
-const fetchAllTransactions = useCallback(() => {
-  const user = FIREBASE_AUTH.currentUser;
-
-  if (user) {
-    const userDocRef = doc(FIREBASE_DB1, "transactions", user.uid);
-    const unsubscribe = onSnapshot(
-      collection(userDocRef, "userTransactions"),
-      (snapshot) => {
-        const transactionArray: Transaction[] = [];
-
-        snapshot.forEach((doc) => {
-          const data = doc.data() as Transaction;
-          transactionArray.push(data);
-        });
-        setTransactions(transactionArray);
-      },
-      (error) => {
-        console.log("Error fetchong real-time data: ", error);
-      }
-    );
-
-    return () => unsubscribe;
-  } else {
-    console.log("no user logged in");
-  }
-}, []);
-
 const FriendsSection = () => {
   const { colors } = useColors();
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  useEffect(() => {
+    const unsubscribe = fetchAllTransactions();
+    return () => unsubscribe && unsubscribe();
+  }, []);
+
+  const fetchAllTransactions = useCallback(() => {
+    const user = FIREBASE_AUTH.currentUser;
+
+    if (user) {
+      const userDocRef = doc(FIREBASE_DB1, "transactions", user.uid);
+      const unsubscribe = onSnapshot(
+        collection(userDocRef, "userTransactions"),
+        (snapshot) => {
+          const transactionArray: Transaction[] = [];
+
+          snapshot.forEach((doc) => {
+            const data = doc.data() as Transaction;
+            transactionArray.push(data);
+          });
+          setTransactions(transactionArray);
+        },
+        (error) => {
+          console.log("Error fetchong real-time data: ", error);
+        }
+      );
+
+      return unsubscribe;
+    } else {
+      console.log("no user logged in");
+    }
+  }, []);
+
   return (
     <View style={{ marginTop: 25 }}>
       <Text
@@ -78,13 +84,13 @@ const FriendsSection = () => {
       {info.friendList.map((item, index) => {
         let positiveInterest = item.interest_earned >= 0;
         let statusColor = positiveInterest ? "#00bb00" : "red";
-        let isLastItem = index === info.friendList.length - 1;
+        //let isLastItem = index === info.friendList.length - 1;
         return (
           <View
             key={index}
             style={[
               styles.conatiner,
-              { borderBottomWidth: isLastItem ? 0 : 1 },
+              { borderBottomWidth: 1 },
             ]}
           >
             <View style={{ width: "37.5%" }}>
@@ -129,6 +135,67 @@ const FriendsSection = () => {
                 style={{ color: statusColor, fontWeight: "bold", fontSize: 16 }}
               >
                 ${formatNumber(Math.abs(item.owes), 2)}
+              </Text>
+            </View>
+          </View>
+        );
+      })}
+
+      {transactions.map((transaction, index) => {
+
+        let positiveInterest = transaction.transactionType === "Lent";
+        let statusColor = positiveInterest ? "#00bb00" : "red";
+        let isLastItem = index === transactions.length - 1;
+        let transactionAmount = parseFloat(transaction.amount);
+        let interest_earned = parseFloat(transaction.interestEarned);
+        let totalAmount = transactionAmount + interest_earned;
+
+        return (
+          <View
+            key={index}
+            style={[
+              styles.conatiner,
+              { borderBottomWidth: isLastItem ? 0 : 1 },
+            ]}
+          >
+            <View style={{ width: "37.5%" }}>
+              <Text
+                style={{
+                  color: colors.primary_black,
+                  letterSpacing: 1,
+                  fontSize: 18,
+                }}
+              >
+                {transaction.name}
+              </Text>
+              <Text style={{ color: statusColor }}>${formatNumber(Math.abs(transactionAmount), 2)}</Text>
+            </View>
+
+            <View style={[styles.price, { backgroundColor: statusColor }]}>
+              <Text style={{ color: "white" }}>
+                {positiveInterest ? "+" : "-"}$
+               {formatNumber(Math.abs(interest_earned), 2)}
+              </Text>
+            </View>
+
+            <View
+              style={{
+                width: "37.5%",
+                alignItems: "flex-end",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ fontSize: 12 }}>
+                {positiveInterest
+                  ? "owes you"
+                  : !positiveInterest
+                  ? "you owe"
+                  : "settled"}
+              </Text>
+              <Text
+                style={{ color: statusColor, fontWeight: "bold", fontSize: 16 }}
+              >
+                ${formatNumber(Math.abs(totalAmount), 2)}
               </Text>
             </View>
           </View>
