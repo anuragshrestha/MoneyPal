@@ -15,9 +15,14 @@ import { useColors } from "../contexts/ColorContext";
 import Icon from "react-native-vector-icons/Ionicons";
 import { FIREBASE_AUTH } from "../firebase/FireBaseAuth";
 import { FIREBASE_DB1 } from "../firebase/FireBaseAuth";
-import axios from "axios";
-import { push, ref, set } from "firebase/database";
-import { doc, Firestore, getDocs, collection, setDoc, } from "firebase/firestore";
+import {
+  doc,
+  Firestore,
+  getDocs,
+  collection,
+  setDoc,
+  onSnapshot,
+} from "firebase/firestore";
 
 interface Transaction {
   name: string;
@@ -40,7 +45,8 @@ const AddScreen = () => {
 
   useEffect(() => {
     verify();
-    fetchAllTransactions();
+    const unsubscribe = fetchAllTransactions();
+    return () => unsubscribe && unsubscribe();
   }, [isNameEntered, name]);
 
   const verify = useCallback(async () => {
@@ -49,8 +55,7 @@ const AddScreen = () => {
       let foundMatch = false;
 
       //loop through each users in the collection
-      allUsers.forEach((doc: { data: () => any; }) => {
-
+      allUsers.forEach((doc: { data: () => any }) => {
         const user = doc.data();
         const isEmailMatch = user.email.toLowerCase() === name.toLowerCase();
 
@@ -59,17 +64,16 @@ const AddScreen = () => {
           setIsIdInList(true);
           setUsername(user.name);
           console.log(user.name);
-          
+
           setEmail(user.email);
           console.log("matched matched");
           return;
         }
       });
-      
-      if(!foundMatch){
+
+      if (!foundMatch) {
         setIsIdInList(false);
       }
-    
     } catch (error) {
       console.log("error: ", error);
     }
@@ -83,27 +87,27 @@ const AddScreen = () => {
       name: userName,
       email: email,
       createdAt: new Date().toISOString(),
+      interestEarned: 0,
     };
 
     try {
-        
       const user = FIREBASE_AUTH.currentUser;
 
-      if(user){
-        
+      if (user) {
         //reference to the current user document in the transations collection
         const userDocRef = doc(FIREBASE_DB1, "transactions", user.uid);
 
         // reference to the sub-collection userTransactions inside the current user document.
-        const newTransactionRef = doc(collection(userDocRef, 'userTransactions'));
+        const newTransactionRef = doc(
+          collection(userDocRef, "userTransactions")
+        );
 
         //save the transactions data in the doc
-         await setDoc( newTransactionRef,transactionData );
-         console.log("trasactions save succesfully ", user.uid);
-         fetchAllTransactions();
-         
-      } else{
-        console.log("no user logged in");    
+        await setDoc(newTransactionRef, transactionData);
+        console.log("trasactions save succesfully ", user.uid);
+        fetchAllTransactions();
+      } else {
+        console.log("no user logged in");
       }
     } catch (error) {
       console.log("error saving transaction details", error);
@@ -111,23 +115,16 @@ const AddScreen = () => {
   }, [amount, interest, transactionType, userName, email]);
 
   function verifyTransaction() {
-
-    if(amount.length == 0) {
-      Alert.alert(
-        "Enter Amount!",
-        "please enter your amount!"
-      );
+    if (amount.length == 0) {
+      Alert.alert("Enter Amount!", "please enter your amount!");
       return false;
     }
 
-    if(interest.length == 0) {
-      Alert.alert(
-        "Enter Interest rate!",
-        "please enter Interest rate"
-      );
+    if (interest.length == 0) {
+      Alert.alert("Enter Interest rate!", "please enter Interest rate");
       return false;
     }
-    
+
     if (parseFloat(interest) > 12) {
       Alert.alert(
         "High Interest rate!!",
@@ -138,30 +135,30 @@ const AddScreen = () => {
     return true;
   }
 
-  const fetchAllTransactions = useCallback(async () => {
-    try {
+  const fetchAllTransactions = useCallback(() => {
+    const user = FIREBASE_AUTH.currentUser;
 
-      const user = FIREBASE_AUTH.currentUser;
+    if (user) {
+      const userDocRef = doc(FIREBASE_DB1, "transactions", user.uid);
+      const unsubscribe = onSnapshot(
+        collection(userDocRef, "userTransactions"),
+        (snapshot) => {
+          const transactionArray: Transaction[] = [];
 
-      if(user){
+          snapshot.forEach((doc) => {
+            const data = doc.data() as Transaction;
+            transactionArray.push(data);
+          });
+          setTransactions(transactionArray);
+        },
+        (error) => {
+          console.log("Error fetching real-time data: ", error);
+        }
+      );
 
-        const userDocRef = doc(FIREBASE_DB1, 'transactions', user.uid);
-        const querySnapShot = await getDocs(collection(userDocRef, "userTransactions"));
-
-        const transactionArray : Transaction[] = [];
-
-        querySnapShot.forEach((doc) => {
-          const data = doc.data() as Transaction;
-          transactionArray.push(data);
-        });
-
-        setTransactions(transactionArray);
-
-      }else{
-        console.log("no user's logged in");   
-      }
-    } catch (error) {
-      console.log("Error fetching transactions:", error);
+      return () => unsubscribe();
+    } else {
+      console.log("no user's logged in");
     }
   }, []);
 
@@ -206,7 +203,7 @@ const AddScreen = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalView}>
             <Text style={[styles.text, { color: colors.primary_blue }]}>
-              {isNameEntered ? "Add a Transaction" : "Add a Friend"}
+              Add a Transaction
             </Text>
             {!isNameEntered ? (
               <View style={styles.name}>
@@ -232,8 +229,7 @@ const AddScreen = () => {
                   </View>
                 )}
 
-                {filteredTransactions.length > 0 ||
-                (!isValidEmail(name)) ? (
+                {filteredTransactions.length > 0 || !isValidEmail(name) ? (
                   <View style={styles.friendListContainer}>
                     {filteredTransactions.map((friend, index) => (
                       <TouchableOpacity
@@ -275,7 +271,7 @@ const AddScreen = () => {
                     )}
                   </View>
                 ) : (
-                  (isValidEmail(name)) && (
+                  isValidEmail(name) && (
                     <View
                       style={{
                         flexDirection: "row",
@@ -516,7 +512,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginTop: 10,
-   // marginBottom: 4
+    // marginBottom: 4
   },
   transactionItem: {
     padding: 10,
@@ -528,7 +524,12 @@ const styles = StyleSheet.create({
   },
 });
 
-function Collection(FIREBASE_DB1: Firestore, arg1: string): import("@firebase/firestore").DocumentReference<unknown, import("@firebase/firestore").DocumentData> {
+function Collection(
+  FIREBASE_DB1: Firestore,
+  arg1: string
+): import("@firebase/firestore").DocumentReference<
+  unknown,
+  import("@firebase/firestore").DocumentData
+> {
   throw new Error("Function not implemented.");
 }
-
