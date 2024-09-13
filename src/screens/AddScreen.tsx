@@ -22,6 +22,7 @@ import {
   collection,
   setDoc,
   onSnapshot,
+  QuerySnapshot,
 } from "firebase/firestore";
 
 interface Transaction {
@@ -29,6 +30,8 @@ interface Transaction {
   email: string;
   amount: string;
   transactionType: string;
+  interest: string;
+  interestEarned: string;
 }
 
 const AddScreen = () => {
@@ -63,7 +66,7 @@ const AddScreen = () => {
           foundMatch = true;
           setIsIdInList(true);
           setUsername(user.name);
-          console.log(user.name);
+          console.log("username: " + user.name);
 
           setEmail(user.email);
           console.log("matched matched");
@@ -81,8 +84,8 @@ const AddScreen = () => {
 
   const saveTransactionDetails = useCallback(async () => {
     const transactionData = {
-      amount: amount,
-      interest: interest,
+      amount: parseFloat(amount),
+      interest: parseFloat(interest),
       transactionType: transactionType,
       name: userName,
       email: email,
@@ -98,13 +101,69 @@ const AddScreen = () => {
         const userDocRef = doc(FIREBASE_DB1, "transactions", user.uid);
 
         // reference to the sub-collection userTransactions inside the current user document.
-        const newTransactionRef = doc(
-          collection(userDocRef, "userTransactions")
-        );
+        const userTransactionRef = collection(userDocRef, "userTransactions");
 
-        //save the transactions data in the doc
-        await setDoc(newTransactionRef, transactionData);
-        console.log("trasactions save succesfully ", user.uid);
+        //check if the transaction already exit for the selected friend
+
+        const querySnapshot = await getDocs(userTransactionRef);
+        let existingTransationId = null;
+        let existingAmount = 0;
+        let existingInterestEarned = 0;
+        let existingInterest = 0;
+        let existingTransactionType = "";
+
+        querySnapshot.forEach((doc) => {
+          const transaction = doc.data() as Transaction;
+          if (transaction.email === email) {
+            existingTransationId = doc.id;
+
+            existingAmount = parseFloat(transaction.amount);
+            existingInterest = parseFloat(transaction.interest);
+            existingInterestEarned = parseFloat(transaction.interestEarned);
+            existingTransactionType = transaction.transactionType;
+            console.log(email);
+          }
+        });
+
+        let updatedAmount = existingAmount;
+        if (existingTransationId) {
+          if (existingTransactionType === transactionType) {
+            
+            // add amount if same transaction type
+            updatedAmount = existingAmount + parseFloat(amount);
+          } else {
+            // Different transaction type: subtract amounts
+            updatedAmount = existingAmount - parseFloat(amount);
+          }
+
+          // Determine the new transaction type
+          const updatedTransactionType =
+            updatedAmount < 0 ? "Borrowed" : "Lent";
+          updatedAmount = Math.abs(updatedAmount);
+
+          // if transaction already exit then update the document in firestore
+          const transactionDocRef = doc(
+            userTransactionRef,
+            existingTransationId
+          );
+
+          const updatedTransactionData = {
+            ...transactionData,
+            amount: updatedAmount,
+            interest: (existingInterest + parseFloat(interest)) / 2, // Add new interest to existing one
+            transactionType: updatedTransactionType,
+          };
+          await setDoc(transactionDocRef, updatedTransactionData, {
+            merge: true,
+          });
+          console.log("succesfully updated the doc.");
+        } else {
+          // create a new document if the transation does not exit
+          const newTransactionRef = doc(userTransactionRef);
+          await setDoc(newTransactionRef, transactionData);
+          console.log("Transaction added successfully.");
+        }
+
         fetchAllTransactions();
       } else {
         console.log("no user logged in");
@@ -221,7 +280,7 @@ const AddScreen = () => {
                       name="time-outline"
                       color="white"
                       size={25}
-                      style={{ marginTop: 10, marginRight: 6, marginLeft: 26 }}
+                      style={{ marginTop: 10, marginRight: 6 }}
                     />
                     <Text style={styles.friendSugesstionText}>
                       Recently added transactions
@@ -235,7 +294,12 @@ const AddScreen = () => {
                       <TouchableOpacity
                         key={index}
                         onPress={() => {
-                          setName(friend.name);
+                          setUsername(friend.name);
+                          setEmail(friend.email);
+                          console.log(filteredTransactions);
+
+                          console.log(friend.name + "name ", friend.email);
+
                           setIsNameEntered(true);
                         }}
                       >
