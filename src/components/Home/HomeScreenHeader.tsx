@@ -6,8 +6,7 @@ import CustomPressable from "../../UI/CustomPressable";
 import { useNavigation } from "@react-navigation/native";
 import { useColors } from "../../contexts/ColorContext";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { FIREBASE_AUTH, FIREBASE_DB, FIREBASE_DB1 } from "../../firebase/FireBaseAuth";
-import { get, ref, set } from "firebase/database";
+import { FIREBASE_AUTH,FIREBASE_DB1 } from "../../firebase/FireBaseAuth";
 import { doc, getDoc } from "firebase/firestore";
 
 const HomeScreenHeader = () => {
