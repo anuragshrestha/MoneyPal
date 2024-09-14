@@ -7,6 +7,7 @@ import { useColors } from "../contexts/ColorContext";
 import HomeStack from "./HomeStack";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { RootTabParamList, ScreenRouteProp, TabBarIconProps } from "../naviagtionTypes";
+import AccountStack from "./AccountStack";
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
@@ -29,7 +30,7 @@ const BottomTab = () => {
               iconName = focused ? "home" : "home-outline";
             } else if(route.name === 'Add'){
               iconName = focused ? 'add-circle' : "add-circle-outline";
-            } else if(route.name === 'Account'){
+            } else if(route.name === 'AccountStack'){
               iconName = focused ? 'person' : 'person-outline';
             }
              return <Ionicons name ={iconName} size={size} color={color} />
@@ -38,7 +39,7 @@ const BottomTab = () => {
       >
         <Tab.Screen name="HomeStack" component={HomeStack} options={{title: 'Home'}} />
         <Tab.Screen name="Add" component={AddScreen} />
-        <Tab.Screen name="Account" component={AccountScreen} />
+        <Tab.Screen name="AccountStack" component={AccountStack} />
       </Tab.Navigator>
   );
 };
