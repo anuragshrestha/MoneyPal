@@ -19,20 +19,19 @@ const AccountScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    
     const fetchUserData = async () => {
       const user = FIREBASE_AUTH.currentUser;
       if (user) {
         const docRef = doc(FIREBASE_DB1, `users/${user.uid}`);
         const onSnapShot = await getDoc(docRef);
 
-        if(onSnapShot.exists()){
+        if (onSnapShot.exists()) {
           const userData = onSnapShot.data();
-           setUserName(userData.name);
+          setUserName(userData.name);
         }
       }
     };
-     fetchUserData();
+    fetchUserData();
   });
 
   function editProfileButton() {
@@ -58,6 +57,10 @@ const AccountScreen = () => {
 
   function navigationScreen(screen: keyof RootStackParamList) {
     navigation.navigate(screen);
+  }
+
+  function navigateToPaymentScreen() {
+    navigation.navigate("SettlePayments");
   }
 
   return (
@@ -94,6 +97,17 @@ const AccountScreen = () => {
           </View>
         </View>
         <View>
+          <Pressable
+            onPress={() => navigateToPaymentScreen()}
+            style={({ pressed }: { pressed: boolean }) => [
+              styles.menuItem,
+              pressed && styles.pressed,
+            ]}
+          >
+            <Text style={[{ color: colors.primary_black }, styles.menuText]}>
+              Settle Payments
+            </Text>
+          </Pressable>
           <Pressable
             onPress={() => navigateScreen("Payment")}
             style={({ pressed }: { pressed: boolean }) => [
@@ -174,7 +188,7 @@ const styles = StyleSheet.create({
   nameText: {
     paddingTop: 5,
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   profileImage: {
     width: 120,
