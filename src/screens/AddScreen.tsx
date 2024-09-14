@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  StatusBar,
 } from "react-native";
 import ScreenWrapper from "../components/ScreenWrapper";
 import { useColors } from "../contexts/ColorContext";
@@ -258,6 +259,7 @@ const AddScreen = () => {
 
   return (
     <ScreenWrapper>
+      <StatusBar  barStyle="light-content" />
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <View style={styles.modalContainer}>
           <View style={styles.modalView}>

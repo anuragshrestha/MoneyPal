@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StatusBar, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { info } from "./FriendsSection";
 import { formatNumber } from "../../utils/utilFunction";
@@ -34,6 +34,7 @@ const HomeScreenHeader = () => {
 
   return (
     <View>
+      <StatusBar  barStyle="light-content" />
       <Text style={styles.welcomeText}>Welcome {userName?.split(" ")[0]}</Text>
 
       <View style={styles.header}>

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
+import { StyleSheet, Text, View, ScrollView, Pressable, StatusBar } from "react-native";
 import React, { useEffect, useState } from "react";
 import ScreenWrapper from "../components/ScreenWrapper";
 import { useColors } from "../contexts/ColorContext";
@@ -65,6 +65,7 @@ const AccountScreen = () => {
 
   return (
     <ScreenWrapper>
+      <StatusBar  barStyle="light-content" />
       <ScrollView>
         <Text style={[styles.profileText, { color: colors.primary_black }]}>
           Your Profile
