@@ -1,9 +1,19 @@
-import { Text, View, StyleSheet, SafeAreaView, ScrollView } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import ScreenWrapper from "../components/ScreenWrapper";
 import { useColors } from "../contexts/ColorContext";
 import { formatNumber } from "../utils/utilFunction";
 import { GlobalStyles } from "../constants/globalstyles";
-
+import { useNavigation } from "@react-navigation/native";
+import { StackType } from "../naviagtionTypes";
+import { StackNavigationProp } from "@react-navigation/stack";
+import Icon from "react-native-vector-icons/Ionicons";
 
 export const info = {
   friendList: [
@@ -34,8 +44,11 @@ export const info = {
   ],
 };
 
+type StackTypeNavigaton = StackNavigationProp<StackType, "Home">;
+
 function NotificationScreen() {
   const { colors } = useColors();
+  const navigation = useNavigation<StackTypeNavigaton>();
 
   const interestTransactions = info.friendList.filter(
     (item) => item.interest_earned !== 0
@@ -47,7 +60,18 @@ function NotificationScreen() {
   return (
     <ScreenWrapper>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <Text style={[styles.title, {color: colors.primary_black}]}>Recent Activity</Text>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => {
+            navigation.navigate("Home");
+          }}
+        >
+          <Icon name="arrow-back" size={28} color="white" />
+        </TouchableOpacity>
+        <Text style={[styles.title, { color: colors.primary_black }]}>
+          Recent Activity
+        </Text>
+
         {interestTransactions.map((item, index) => {
           let amount = item.amount_lent > 0;
           let positiveInterest = item.interest_earned >= 0;
@@ -55,7 +79,7 @@ function NotificationScreen() {
           return (
             <View key={index} style={styles.outerInterest}>
               <View style={styles.innerInterest}>
-                <Text style={{color: colors.primary_black, fontSize: 16}}>
+                <Text style={{ color: colors.primary_black, fontSize: 16 }}>
                   An automatic interest of{" "}
                   <Text style={{ color: statusColor }}>
                     ${formatNumber(Math.abs(item.interest_earned), 2)}
@@ -88,7 +112,7 @@ function NotificationScreen() {
           return (
             <View key={index} style={styles.outerInterest}>
               <View style={styles.innerInterest}>
-                <Text style={{color: colors.primary_black, fontSize: 16}}>
+                <Text style={{ color: colors.primary_black, fontSize: 16 }}>
                   A amount of{" "}
                   <Text style={{ color: statusColor }}>
                     ${amount ? item.amount_lent : -1 * item.amount_lent}
@@ -113,7 +137,7 @@ function NotificationScreen() {
           );
         })}
       </ScrollView>
-      </ScreenWrapper>
+    </ScreenWrapper>
   );
 }
 
@@ -128,7 +152,12 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     marginTop: 20,
     fontSize: 22,
-    margin: 5,
+    marginLeft: 40,
+  },
+  backButton: {
+    position: "absolute",
+    top: 28,
+    left: 10,
   },
   outerInterest: {
     borderBottomColor: GlobalStyles.colors.primary_black,
