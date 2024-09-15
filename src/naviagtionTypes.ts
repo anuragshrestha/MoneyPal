@@ -13,6 +13,7 @@ export type RootStackParamList = {
   FeedBack: undefined;
   AccountStack: undefined;
   SettlePayments: undefined;
+  FriendsDetails: undefined;
 };
 
 export type AccountScreenNavigationProp = StackNavigationProp<
