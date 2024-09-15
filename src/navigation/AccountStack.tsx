@@ -18,7 +18,7 @@ interface Transaction {
 
 // Define the ParamList for your stack
 export type AccountStackParamList = {
-  Account: undefined;
+  Accounts: undefined;
   SettlePayments: undefined;
   FriendsDetails: { friend: Transaction };
 };
@@ -28,7 +28,7 @@ const AccountStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: true }}>
       <Stack.Screen
-        name="Account"
+        name="Accounts"
         component={AccountScreen}
         options={{
           headerShown: false, 

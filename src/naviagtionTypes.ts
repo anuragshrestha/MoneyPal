@@ -11,14 +11,14 @@ export type RootStackParamList = {
   Settings: undefined;
   Contact: undefined;
   FeedBack: undefined;
-  AccountStack: undefined;
+  Accounts: undefined;
   SettlePayments: undefined;
   FriendsDetails: undefined;
 };
 
 export type AccountScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
-  'AccountStack'
+  'Account'
 >;
 
 
@@ -26,7 +26,7 @@ export type AccountScreenNavigationProp = StackNavigationProp<
 export type RootTabParamList = {
   HomeStack: undefined;
   Add: undefined;
-  AccountStack: undefined;
+  Account: undefined;
 };
 export interface TabBarIconProps {
   focused: boolean;

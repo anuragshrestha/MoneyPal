@@ -30,7 +30,7 @@ const BottomTab = () => {
               iconName = focused ? "home" : "home-outline";
             } else if(route.name === 'Add'){
               iconName = focused ? 'add-circle' : "add-circle-outline";
-            } else if(route.name === 'AccountStack'){
+            } else if(route.name === 'Account'){
               iconName = focused ? 'person' : 'person-outline';
             }
              return <Ionicons name ={iconName} size={size} color={color} />
@@ -39,7 +39,7 @@ const BottomTab = () => {
       >
         <Tab.Screen name="HomeStack" component={HomeStack} options={{title: 'Home'}} />
         <Tab.Screen name="Add" component={AddScreen} />
-        <Tab.Screen name="AccountStack" component={AccountStack} />
+        <Tab.Screen name="Account" component={AccountStack} />
       </Tab.Navigator>
   );
 };
