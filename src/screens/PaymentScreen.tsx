@@ -7,14 +7,19 @@ import {
   StatusBar,
   FlatList,
   TextInput,
+  Touchable,
+  TouchableOpacity,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { FIREBASE_AUTH, FIREBASE_DB1 } from "../firebase/FireBaseAuth";
 import { useColors } from "../contexts/ColorContext";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { collection, doc, onSnapshot } from "firebase/firestore";
+import { useNavigation } from "@react-navigation/native";
+import { set } from "firebase/database";
+import { AccountStackParamList } from "../navigation/AccountStack";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-const { height } = Dimensions.get("window");
 
 interface Transaction {
   name: string;
@@ -27,9 +32,11 @@ interface Transaction {
 
 const PaymentScreen = () => {
   const [name, setName] = useState();
+  const [email, setEmail] = useState();
   const { colors } = useColors();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const item = ["wfvwvw"];
+  const navigation = useNavigation<NativeStackNavigationProp<AccountStackParamList>>();
+
 
   useEffect(() => {
     const unsubscribe = fetchAllTransactions();
@@ -75,19 +82,22 @@ const PaymentScreen = () => {
     item: Transaction;
     index: number;
   }) => (
-    <View
-      style={[
+    <TouchableOpacity
+      key={index}
+      style=
+      {[
         styles.friendItem,
         index === transactions.length - 1 ? { borderBottomWidth: 0 } : {},
       ]}
-    >
+      onPress={() => {navigation.navigate("FriendsDetails", {friend: item})}}
+      >
       <Icon name="person" size={24} color="black" style={{ marginLeft: 17 }} />
       <Text
         style={{ fontSize: 20, color: "darkblue", marginLeft: 8, margin: 5 }}
       >
         {item.name}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -96,10 +106,15 @@ const PaymentScreen = () => {
 
       <View style={styles.topContainer}>
         <Text style={[styles.profileText, { color: "black" }]}>
-         Settle a Payment
+          Settle a Payment
         </Text>
         <View style={styles.inputContainer}>
-          <Icon name="search" size={24} color="black" style={styles.searchIcon} />
+          <Icon
+            name="search"
+            size={24}
+            color="black"
+            style={styles.searchIcon}
+          />
           <TextInput
             style={styles.input}
             placeholder="Enter a name"
@@ -141,12 +156,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   input: {
-    
     width: "95%",
     height: "30%",
     textAlign: "left",
-     flex:1,
-     paddingLeft: 10,
+    flex: 1,
+    paddingLeft: 10,
     fontSize: 18,
   },
   iconTextContainer: {
