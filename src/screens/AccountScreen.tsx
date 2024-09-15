@@ -110,17 +110,6 @@ const AccountScreen = () => {
             </Text>
           </Pressable>
           <Pressable
-            onPress={() => navigateScreen("Payment")}
-            style={({ pressed }: { pressed: boolean }) => [
-              styles.menuItem,
-              pressed && styles.pressed,
-            ]}
-          >
-            <Text style={[{ color: colors.primary_black }, styles.menuText]}>
-              Payment Records
-            </Text>
-          </Pressable>
-          <Pressable
             onPress={() => navigateScreen("Subscriptions")}
             style={({ pressed }: { pressed: boolean }) => [
               styles.menuItem,

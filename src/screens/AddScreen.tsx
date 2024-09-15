@@ -590,12 +590,4 @@ const styles = StyleSheet.create({
   },
 });
 
-function Collection(
-  FIREBASE_DB1: Firestore,
-  arg1: string
-): import("@firebase/firestore").DocumentReference<
-  unknown,
-  import("@firebase/firestore").DocumentData
-> {
-  throw new Error("Function not implemented.");
-}
+
