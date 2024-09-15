@@ -7,6 +7,7 @@ import FriendsDetails from "../screens/FriendsDetails";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 interface Transaction {
+  id: any;
   name: string;
   email: string;
   amount: string;
