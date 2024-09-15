@@ -18,13 +18,14 @@ import { FIREBASE_AUTH } from "../firebase/FireBaseAuth";
 import { FIREBASE_DB1 } from "../firebase/FireBaseAuth";
 import {
   doc,
-  Firestore,
   getDocs,
   collection,
   setDoc,
   onSnapshot,
-  QuerySnapshot,
 } from "firebase/firestore";
+import { useNavigation } from "@react-navigation/native";
+import { RootTabParamList } from "../naviagtionTypes";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 
 interface Transaction {
   name: string;
@@ -34,6 +35,8 @@ interface Transaction {
   interest: string;
   interestEarned: string;
 }
+
+type AddScreenNavigationProp = BottomTabNavigationProp<RootTabParamList, "Add">;
 
 const AddScreen = () => {
   const [name, setName] = useState<string>("");
@@ -46,6 +49,8 @@ const AddScreen = () => {
   const [isIdInList, setIsIdInList] = useState<boolean>(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const { colors } = useColors();
+
+  const navigation = useNavigation<AddScreenNavigationProp>();
 
   useEffect(() => {
     verify();
@@ -129,7 +134,6 @@ const AddScreen = () => {
         let updatedAmount = existingAmount;
         if (existingTransationId) {
           if (existingTransactionType === transactionType) {
-            
             // add amount if same transaction type
             updatedAmount = existingAmount + parseFloat(amount);
           } else {
@@ -259,10 +263,23 @@ const AddScreen = () => {
 
   return (
     <ScreenWrapper>
-      <StatusBar  barStyle="light-content" />
+      <StatusBar barStyle="light-content" />
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <View style={styles.modalContainer}>
           <View style={styles.modalView}>
+            {/* Conditionally render the back arrow only when isNameEntered is true */}
+            {isNameEntered && (
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => {
+                  setIsNameEntered(false); // Reset the flag when going back
+                  navigation.navigate("Add"); // Go back to the previous screen
+                }}
+              >
+                <Icon name="arrow-back" size={30} color="white" />
+              </TouchableOpacity>
+            )}
+
             <Text style={[styles.text, { color: colors.primary_blue }]}>
               Add a Transaction
             </Text>
@@ -359,7 +376,7 @@ const AddScreen = () => {
                     </View>
                   )
                 )}
-              </View> 
+              </View>
             ) : (
               <>
                 <View style={[styles.names, { width: "70%" }]}>
@@ -466,6 +483,11 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     width: "100%",
+  },
+  backButton: {
+    position: "absolute",
+    top: 10,
+    left: 10,
   },
   text: {
     fontSize: 30,
@@ -589,5 +611,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
-
