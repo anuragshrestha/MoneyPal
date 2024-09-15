@@ -22,6 +22,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 
 interface Transaction {
+ id: string;
   name: string;
   email: string;
   amount: string;
@@ -31,7 +32,7 @@ interface Transaction {
 }
 
 const PaymentScreen = () => {
-  const [name, setName] = useState();
+  const [name, setName] = useState<string>("");
   const [email, setEmail] = useState();
   const { colors } = useColors();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -55,7 +56,7 @@ const PaymentScreen = () => {
           const transactionArray: Transaction[] = [];
 
           snapShot.forEach((doc) => {
-            const data = doc.data() as Transaction;
+            const data = { ...doc.data(), id: doc.id} as Transaction;
             transactionArray.push(data);
           });
           // console.log(transactionArray, "transaction array");
@@ -75,6 +76,9 @@ const PaymentScreen = () => {
     }
   }, []);
 
+  const filteredTransactions = name? transactions.filter((transaction) => 
+    transaction.name.toLowerCase().includes(name.toLowerCase())) : transactions;
+
   const renderItem = ({
     item,
     index,
@@ -89,7 +93,7 @@ const PaymentScreen = () => {
         styles.friendItem,
         index === transactions.length - 1 ? { borderBottomWidth: 0 } : {},
       ]}
-      onPress={() => {navigation.navigate("FriendsDetails", {friend: item})}}
+      onPress={() => {navigation.navigate("FriendsDetails", {friend: item}, )}}
       >
       <Icon name="person" size={24} color="black" style={{ marginLeft: 17 }} />
       <Text
@@ -130,9 +134,9 @@ const PaymentScreen = () => {
         <View style={styles.divider} />
       </View>
       <FlatList
-        data={transactions}
+        data={filteredTransactions}
         renderItem={renderItem}
-        keyExtractor={(item) => item.email}
+        keyExtractor={(item) => item.id}
       />
     </View>
   );
@@ -145,7 +149,6 @@ const styles = StyleSheet.create({
   },
   topContainer: {
     alignItems: "center",
-    marginTop: "12%",
     width: "100%",
     paddingVertical: 20,
   },
@@ -167,7 +170,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     width: "90%",
-    marginTop: "5%",
+    marginTop: "7%",
   },
   activeFriendsText: {
     fontSize: 20,
