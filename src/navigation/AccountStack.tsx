@@ -26,6 +26,7 @@ const Stack = createNativeStackNavigator<AccountStackParamList>();
 
 const AccountStack = () => {
   return (
+    
     <Stack.Navigator screenOptions={{ headerShown: true }}>
       <Stack.Screen
         name="Accounts"

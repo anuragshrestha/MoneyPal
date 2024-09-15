@@ -28,6 +28,11 @@ export type RootTabParamList = {
   Add: undefined;
   Account: undefined;
 };
+
+export type StackType = {
+  Home:undefined;
+  Notification: undefined;
+}
 export interface TabBarIconProps {
   focused: boolean;
   color: string;
