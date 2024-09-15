@@ -359,7 +359,7 @@ const AddScreen = () => {
                     </View>
                   )
                 )}
-              </View>
+              </View> 
             ) : (
               <>
                 <View style={[styles.names, { width: "70%" }]}>
