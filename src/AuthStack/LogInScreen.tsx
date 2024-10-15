@@ -12,7 +12,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH } from "../firebase/FireBaseAuth";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { LinearGradient } from "expo-linear-gradient";
+
 
 const LogInScreen = () => {
   const [username, setUsername] = useState("");
@@ -33,7 +33,6 @@ const LogInScreen = () => {
         username,
         password
       );
-      //console.log("user logged in: ", userCredential.user);
       navigation.navigate("BottomTab");
     } catch (error) {
       Alert.alert("Error", "Incorrect email or password!!");
@@ -66,30 +65,16 @@ const LogInScreen = () => {
             onChangeText={setPassword}
           />
         </View>
-        <View style={{ flexDirection: "row" }}>
-          <LinearGradient
-            colors={["orange", "purple"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.gradientButton}
-          >
-            <TouchableOpacity style={styles.button} onPress={handleSignIn}>
+        <View style={{ flexDirection: "row", marginLeft:20 }}>
+            <TouchableOpacity style={[styles.button, {backgroundColor: 'black'}]} onPress={handleSignIn}>
               <Text style={styles.buttonText}>Log In</Text>
             </TouchableOpacity>
-          </LinearGradient>
-          <LinearGradient
-            colors={["orange", "purple"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.gradientButton}
-          >
             <TouchableOpacity
-              style={styles.button}
+              style={[styles.button, {backgroundColor:"black"}]}
               onPress={() => navigation.navigate("SignUp")}
             >
               <Text style={styles.buttonText}>Sign Up</Text>
             </TouchableOpacity>
-          </LinearGradient>
         </View>
       </View>
     </ScrollView>
@@ -122,8 +107,13 @@ const styles = StyleSheet.create({
     color: "black",
   },
   button: {
-    height: 28,
+    height: 40,
     margin: 5,
+    borderRadius: 10,
+    borderWidth: 2,   
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 15,
   },
   icon: {
     marginRight: 10,
@@ -144,12 +134,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
-  gradientButton: {
-    borderRadius: 6,
-    margin: 5,
-    width: "46%",
-    marginTop: 10,
-  },
+ 
 });
 
 export default LogInScreen;

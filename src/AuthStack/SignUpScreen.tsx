@@ -10,10 +10,9 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import ScreenWrapper from "../components/ScreenWrapper";
-import { LinearGradient } from "expo-linear-gradient";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { FIREBASE_AUTH, FIREBASE_DB, FIREBASE_DB1 } from "../firebase/FireBaseAuth";
+import { FIREBASE_AUTH, FIREBASE_DB1 } from "../firebase/FireBaseAuth";
 import { doc, setDoc } from "firebase/firestore";
 
 const SignUpScreen = () => {
@@ -26,7 +25,8 @@ const SignUpScreen = () => {
   const isValidEmail = (email: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const isValidPassword = (password: string) => /^[a-zA-Z0-9]{6,}$/.test(password);
+  const isValidPassword = (password: string) =>
+    /^[a-zA-Z0-9]{6,}$/.test(password);
 
   function createAccount() {
     if (verifiedDetails()) {
@@ -120,16 +120,12 @@ const SignUpScreen = () => {
               onChangeText={setPassword}
             />
           </View>
-          <LinearGradient
-            colors={["orange", "purple"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.gradientButton}
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: "blue", borderRadius: 6 }]}
+            onPress={createAccount}
           >
-            <TouchableOpacity style={styles.button} onPress={createAccount}>
-              <Text style={styles.buttonText}>Create account</Text>
-            </TouchableOpacity>
-          </LinearGradient>
+            <Text style={styles.buttonText}>Create account</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.row}>
           <Text style={{ color: "grey" }}>Already have an account?</Text>
