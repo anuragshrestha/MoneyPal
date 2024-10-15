@@ -173,7 +173,8 @@ const styles = StyleSheet.create({
   button: {
     height: 28,
     margin: 5,
-    width: "95%",
+    width: "90%",
+    marginTop: 15
   },
   gradientButton: {
     borderRadius: 6,

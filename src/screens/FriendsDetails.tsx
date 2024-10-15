@@ -155,14 +155,14 @@ const FriendsDetails = ({ route, }: FriendsDetailsProps) => {
         onChangeText={(text: any) => setAmount(text)}
       />
       <View style={styles.buttonContainer}>
-        <View style={styles.button}>
+        <View style={[styles.button, {marginRight: 5}]}>
           <Button title="Submit" onPress={submitButton} />
         </View>
         <View style={styles.button}>
           <Button title="Cancel" onPress={cancelButton} color="red" />
         </View>
       </View>
-      <Text style={{ marginTop: 100 }}> A flatlist will be shown here </Text>
+      {/* <Text style={{ marginTop: 100 }}> A flatlist will be shown here </Text> */}
     </View>
   );
 };
