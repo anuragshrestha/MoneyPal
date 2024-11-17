@@ -5,18 +5,19 @@
 MoneyPal is a peer-to-peer micro-lending platform designed specifically for college students who need flexible, small-scale loans of few hundreds dollars, to manage their daily and monthly expenses such as rent, groceris, books, transportation and many more. Through MoneyPal, students can quickly borrow money from their friends, colleagues, roommates at low interest rates from 2-6%. The platform provides flexible repayment terms, easily accessible money.
 
 The purpose of MoneyPal is to offer a safe, reliable, and affordable financial
-solution specifically designed for students, enabling them to manage daily
+solution specifically designed for financially unstable students, enabling them to manage daily
 expenses without the heavy burden and stress of traditional loans and credit
 cards. Making convenient for friends, family for easy small amount transaction.
 
-<p float="left">
-  <img src="./assets/loginscreen.png" width="300" style="margin-right: 40px;"/>
-  <img src="./assets/homescreen.png" width="300" />
-</p>
-<p float="left">
-  <img src="./assets/accountscreen.png" width="300" style="margin-right: 40px;" />
-  <img src="./assets/recentscreen.png" width="300" />
-</p>
+<div style="display: flex; gap: 40px;">
+  <img src="./assets/loginscreen.png" width="300">
+  <img src="./assets/homescreen.png" width="300">
+</div>
+<div style="display: flex; gap: 40px; margin-top: 20px;">
+  <img src="./assets/accountscreen.png" width="300">
+  <img src="./assets/recentscreen.png" width="300">
+</div>
+
 
 
 # Tech stack used:
