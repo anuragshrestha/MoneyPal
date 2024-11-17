@@ -11,7 +11,7 @@ cards. Making convenient for friends, family for easy small amount transaction.
 
 <p float="left">
   <img src="./assets/Screenshot 2024-10-14 at 10.53.56 PM.png" width="300" />
-  <img src="./assests/Screenshot 2024-10-14 at 11.17.26 PM.png" width="300" />
+  <img src="./assets/Screenshot 2024-10-14 at 11.17.26 PM.png" width="300" />
 </p>
 
 
