@@ -9,14 +9,11 @@ solution specifically designed for financially unstable students, enabling them 
 expenses without the heavy burden and stress of traditional loans and credit
 cards. Making convenient for friends, family for easy small amount transaction.
 
-<div style="display: flex; gap: 40px;">
-  <img src="./assets/loginscreen.png" width="300">
-  <img src="./assets/homescreen.png" width="300">
-</div>
-<div style="display: flex; gap: 40px; margin-top: 20px;">
-  <img src="./assets/accountscreen.png" width="300">
-  <img src="./assets/recentscreen.png" width="300">
-</div>
+| <img src="./assets/loginscreen.png" width="300"> | <img src="./assets/homescreen.png" width="300"> |
+|-------------------------------------------------|------------------------------------------------|
+| <img src="./assets/accountscreen.png" width="300"> | <img src="./assets/recentscreen.png" width="300"> |
+
+
 
 
 
