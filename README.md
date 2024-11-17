@@ -10,11 +10,11 @@ expenses without the heavy burden and stress of traditional loans and credit
 cards. Making convenient for friends, family for easy small amount transaction.
 
 <p float="left">
-  <img src="./assets/loginscreen.png" width="300" style="margin-right: 20px;"/>
+  <img src="./assets/loginscreen.png" width="300" style="margin-right: 40px;"/>
   <img src="./assets/homescreen.png" width="300" />
 </p>
 <p float="left">
-  <img src="./assets/accountscreen.png" width="300" style="margin-right: 20px;" />
+  <img src="./assets/accountscreen.png" width="300" style="margin-right: 40px;" />
   <img src="./assets/recentscreen.png" width="300" />
 </p>
 
