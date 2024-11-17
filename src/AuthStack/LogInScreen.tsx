@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   Text,
@@ -13,18 +13,18 @@ import { FIREBASE_AUTH } from "../firebase/FireBaseAuth";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-
 const LogInScreen = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // New state for password visibility
   const navigation = useNavigation<any>();
 
   useFocusEffect(
     React.useCallback(() => {
-    setUsername("");
-    setPassword("");
-  }, [])
-);
+      setUsername("");
+      setPassword("");
+    }, [])
+  );
 
   const handleSignIn = async () => {
     try {
@@ -51,30 +51,39 @@ const LogInScreen = () => {
             placeholder="Enter your email"
             placeholderTextColor="grey"
             value={username}
-            onChangeText={(text: string) => setUsername(text.toLowerCase())}
+            onChangeText={(text) => setUsername(text.toLowerCase())}
           />
         </View>
         <Text style={styles.text}>Password</Text>
         <View style={styles.inputContainer}>
-          <Icon name="envelope" size={20} color="black" style={styles.icon} />
+          <Icon name="lock" size={20} color="black" style={styles.icon} />
           <TextInput
             style={styles.label}
             placeholder="Enter password"
             placeholderTextColor="grey"
             value={password}
             onChangeText={setPassword}
+            secureTextEntry={!showPassword} // Hides password when showPassword is false
           />
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+            <Icon
+              name={showPassword ? "eye-slash" : "eye"}
+              size={20}
+              color="black"
+              style={styles.icon}
+            />
+          </TouchableOpacity>
         </View>
-        <View style={{ flexDirection: "row", marginLeft:20 }}>
-            <TouchableOpacity style={[styles.button, {backgroundColor: 'black'}]} onPress={handleSignIn}>
-              <Text style={styles.buttonText}>Log In</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.button, {backgroundColor:"black"}]}
-              onPress={() => navigation.navigate("SignUp")}
-            >
-              <Text style={styles.buttonText}>Sign Up</Text>
-            </TouchableOpacity>
+        <View style={{ flexDirection: "row", marginLeft: 20 }}>
+          <TouchableOpacity style={[styles.button, { backgroundColor: 'black' }]} onPress={handleSignIn}>
+            <Text style={styles.buttonText}>Log In</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: "black" }]}
+            onPress={() => navigation.navigate("SignUp")}
+          >
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -134,7 +143,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
- 
 });
 
 export default LogInScreen;

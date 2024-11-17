@@ -91,13 +91,13 @@ const PaymentScreen = () => {
       style=
       {[
         styles.friendItem,
-        index === transactions.length - 1 ? { borderBottomWidth: 0 } : {},
+        index === transactions.length - 1 ? { borderBottomWidth: 1 } : {},
       ]}
       onPress={() => {navigation.navigate("FriendsDetails", {friend: item}, )}}
       >
-      <Icon name="person" size={24} color="black" style={{ marginLeft: 17 }} />
+      <Icon name="person" size={24} color="white" style={{ marginLeft: 17 }} />
       <Text
-        style={{ fontSize: 20, color: "darkblue", marginLeft: 8, margin: 5 }}
+        style={{ fontSize: 20, color: "white", marginLeft: 8, margin: 5 }}
       >
         {item.name}
       </Text>
@@ -105,18 +105,20 @@ const PaymentScreen = () => {
   );
 
   return (
-    <View>
+    <View style={{backgroundColor:'black', flex:1}}>
       <StatusBar backgroundColor="white" barStyle="dark-content" />
 
+
+     
       <View style={styles.topContainer}>
-        <Text style={[styles.profileText, { color: "black" }]}>
+        <Text style={[styles.profileText, { color: "white" }]}>
           Settle a Payment
         </Text>
         <View style={styles.inputContainer}>
           <Icon
             name="search"
             size={24}
-            color="black"
+            color="white"
             style={styles.searchIcon}
           />
           <TextInput
@@ -128,7 +130,7 @@ const PaymentScreen = () => {
           />
         </View>
         <View style={styles.iconTextContainer}>
-          <Icon name="people" size={30} color="black" />
+          <Icon name="people" size={30} color="white" />
           <Text style={styles.activeFriendsText}>All active friends</Text>
         </View>
         <View style={styles.divider} />
@@ -151,10 +153,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     paddingVertical: 20,
+    backgroundColor:'black',
   },
   friendItem: {
     flexDirection: "row",
-    borderBottomColor: "black",
+    borderBottomColor: "white",
     borderBottomWidth: 1,
     alignItems: "center",
   },
@@ -175,12 +178,12 @@ const styles = StyleSheet.create({
   activeFriendsText: {
     fontSize: 20,
     paddingLeft: 10,
-    color: "black",
+    color: "white",
   },
   divider: {
     width: "100%",
     height: 1,
-    backgroundColor: "black",
+    backgroundColor: "white",
     marginBottom: 10,
   },
   inputContainer: {

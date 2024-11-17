@@ -81,61 +81,7 @@ const FriendsSection = () => {
         Friends
       </Text>
 
-      {info.friendList.map((item, index) => {
-        let positiveInterest = item.interest_earned >= 0;
-        let statusColor = positiveInterest ? "#00bb00" : "red";
-        return (
-          <View
-            key={index}
-            style={[styles.conatiner, { borderBottomWidth: 1 }]}
-          >
-            <View style={{ width: "37.5%" }}>
-              <Text
-                style={{
-                  color: colors.primary_black,
-                  letterSpacing: 1,
-                  fontSize: 18,
-                }}
-              >
-                {item.name}
-              </Text>
-              <Text style={{ color: statusColor }}>
-                ${formatNumber(Math.abs(item.amount_lent), 2)}
-              </Text>
-            </View>
-
-            <View style={[styles.price, { backgroundColor: statusColor }]}>
-              <Text style={{ color: "white" }}>
-                {positiveInterest ? "+" : "-"}$
-                {positiveInterest
-                  ? item.interest_earned
-                  : -1 * item.interest_earned}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                width: "37.5%",
-                alignItems: "flex-end",
-                justifyContent: "center",
-              }}
-            >
-              <Text style={{ fontSize: 12 }}>
-                {item.owes > 0
-                  ? "owes you"
-                  : item.owes == 0
-                  ? "settled"
-                  : "you owe"}
-              </Text>
-              <Text
-                style={{ color: statusColor, fontWeight: "bold", fontSize: 16 }}
-              >
-                ${formatNumber(Math.abs(item.owes), 2)}
-              </Text>
-            </View>
-          </View>
-        );
-      })}
+     
 
       {transactions.map((transaction, index) => {
         let positiveInterest = transaction.transactionType === "Lent";

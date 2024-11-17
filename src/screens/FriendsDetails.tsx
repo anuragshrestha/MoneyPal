@@ -129,7 +129,7 @@ const FriendsDetails = ({ route, }: FriendsDetailsProps) => {
 
     saveTransaction();
     setAmount("");
-    
+    navigation.navigate("SettlePayments")
     console.log("pressed submit button", amount);
   }
 
@@ -139,11 +139,12 @@ const FriendsDetails = ({ route, }: FriendsDetailsProps) => {
     navigation.navigate("SettlePayments")
   }
   return (
+    <View style={{flex:1, backgroundColor:'black'}}>
     <View style={styles.mainContainer}>
       {transactionType === "Lent" ? (
-        <Text style={{ fontSize: 20 }}>How much did {firstName} paid you?</Text>
+        <Text style={{ fontSize: 20, color:'white' }}>How much did {firstName} paid you?</Text>
       ) : (
-        <Text style={{ fontSize: 20 }}>How much you paid to {firstName}?</Text>
+        <Text style={{ fontSize: 20, color:'white'}}>How much you paid to {firstName}?</Text>
       )}
 
       <TextInput
@@ -164,6 +165,7 @@ const FriendsDetails = ({ route, }: FriendsDetailsProps) => {
       </View>
       {/* <Text style={{ marginTop: 100 }}> A flatlist will be shown here </Text> */}
     </View>
+    </View>
   );
 };
 
@@ -183,6 +185,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     marginTop: "5%",
+    backgroundColor: "black", 
   },
   buttonContainer: {
     flexDirection: "row",
