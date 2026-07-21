@@ -1,6 +1,6 @@
 # Welcome to MoneyPal
 
-# This mobile app was selected for University of New Mexico app contest final round.
+
 
 MoneyPal is a peer-to-peer micro-lending platform designed specifically for college students who need flexible, small-scale loans of few hundreds dollars, to manage their daily and monthly expenses such as rent, groceris, books, transportation and many more. Through MoneyPal, students can quickly borrow money from their friends, colleagues, roommates at low interest rates from 2-6%. The platform provides flexible repayment terms, easily accessible money.
 
